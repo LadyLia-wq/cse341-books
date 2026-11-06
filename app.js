@@ -39,4 +39,27 @@ app.get('/books', async (req, res) => {
   }
 });
 
+app.get('/books/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const book = await getDb()
+      .collection('books')
+      .findOne({ id });
+
+    if (!book) {
+      return res.status(404).json({
+        message: 'Book not found'
+      });
+    }
+
+    return res.status(200).json(book);
+  } catch (error) {
+    console.error('Failed to retrieve book:', error.message);
+    return res.status(500).json({
+      message: 'Failed to retrieve book'
+    });
+  }
+});
+
 export default app;
